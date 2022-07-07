@@ -43,57 +43,45 @@
         <br>
         <h3 class="mb-5">Contact us</h3>
         </div>
-        <form role="form" action="handler.php" method="post" id="reused_form">
-            <div class="row">
-                <div class="col-sm-6 form-group">
-                    <label for="name">
-                        First Name:</label>
-                    <input type="text" class="form-control" id="firstname" name="firstname"  maxlength="50">
-                </div>
-                <div class="col-sm-6 form-group">
-                    <label for="name">
-                        Last Name:</label>
-                    <input type="text" class="form-control" id="lastname" name="lastname"  maxlength="50">
-                </div>
-            </div>  
-            <div class="row">
-                <div class="col-sm-6 form-group">
-                    <label for="email">
-                        Email:</label>
-                    <input type="text" class="form-control" id="email" name="email"
-                    maxlength="50">
-                </div>
-                <div class="col-sm-6 form-group">
-                    <label for="email">
-                        Phone:</label>
-                    <input type="tel" class="form-control" id="phone" name="phone" required
-                    maxlength="50">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 form-group">
-                    <label for="name">
-                        Message:</label>
-                    <textarea class="form-control" type="textarea" id="message" name="message" placeholder="Your Message Here" maxlength="6000" rows="7"></textarea>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-sm-12 form-group">
-                    <button type="submit" class="btn btn-lg btn-success btn-block" id="btnContactUs">Send</button>
-                </div>
-            </div>
+            <?php
 
-        </form>
-        <div id="success_message" style="width:100%; height:100%; display:none; ">
-            <h3>Sent your message successfully!</h3>
-        </div>
-        <div id="error_message"
-                style="width:100%; height:100%; display:none; ">
-                    <h3>Error</h3>
-                    Sorry there was an error sending your form.
 
-        </div>
+        // Database information for connection
+        $conn = mysqli_connect("database", "root", "root", "insert");
+                    
+        // Check connection
+        if($conn === false){
+            die("ERROR: Could not connect. "
+                . mysqli_connect_error());
+        }
+        
+        // Taking all 5 values from the form data(input)
+        $firstname = filter_var($_POST['firstname'], FILTER_SANITIZE_STRING);
+        $lastname = filter_var($_POST['lastname'], FILTER_SANITIZE_STRING);
+        $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        $phone = $_POST['phone'];
+        $message =filter_var($_POST['message'], FILTER_SANITIZE_STRING);
+        
+        // Performing insert query execution
+        // here our table name is college
+        $sql = "INSERT INTO form  VALUES (NULL,'$firstname',
+            '$lastname','$email','$phone','$message')";
+        
+        if(mysqli_query($conn, $sql)){
+            echo "<h3>Thank you for you feedback $firstname !</h3>"
+                . "<p>It is much appreciated. We will come back to you if needed. </p>";
+            
+                    echo nl2br("\n$firstname\n $lastname\n "
+                . "$email\n $phone\n $message");
+        } else{
+            echo "ERROR: Hush! Sorry $sql. "
+                . mysqli_error($conn);
+        }
+        
+        // Close connection
+        mysqli_close($conn);
+        ?>
+
         
     </section> 
 </section> 
@@ -103,3 +91,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous"></script>
 </body>
 </html>
+
+
